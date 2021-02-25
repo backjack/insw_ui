@@ -10,6 +10,7 @@ import { BodyComponent } from './core/body/body.component';
 import { CreateInvoiceComponent } from './pages/create-invoice/create-invoice.component';
 import { DialogBoxComponent } from './core/dialog-box/dialog-box.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import {FlexLayoutModule}  from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

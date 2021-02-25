@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class HeaderComponent implements OnInit {
 
   fyear_val:string;
+
+  @Input() deviceXs: boolean;
 
   fyears =[ {id:2020,name:"2019-20"},{id:2021,name:"2020-21"}]
 

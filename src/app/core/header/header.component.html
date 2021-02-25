@@ -1,16 +1,46 @@
 <mat-toolbar color="primary">
-    <mat-toolbar-row>
-    
-      <h1>INSW</h1>
-      <span class="menu-spacer"></span>
-      <div>
-        <a mat-button [routerLink]="'/dashboard'"> Dashboard </a>
-        <a mat-button [routerLink]="'/create-invoice'"> Create Invoice </a>
+    <mat-toolbar-row fxLayoutAlign="space-between center">
+     
+      <div fxLayout="row">
+        <button mat-button [routerLink]="'/dashboard'"> 
+            <span class="logo"> INSW</span> 
+        </button>
+            <div *ngIf="!deviceXs">
+            <a mat-button [routerLink]="'/dashboard'"> Dashboard </a>
+            <a mat-button [routerLink]="'/create-invoice'"> Create Invoice </a>
+            </div>
+
+      </div>
+
+      <div *ngIf="deviceXs">
+        <a mat-button [routerLink]="'/accounts'">
+            <mat-icon *ngIf="deviceXs">more_vert</mat-icon>
+           
+          </a>
 
       </div>
       
-      <div style= "width:40%" class= "mat-small mat-caption" >
+      <div *ngIf="!deviceXs">
+        
+         
+        <a mat-button [routerLink]="'/accounts'"> Hello Neeraj </a>
+        <button mat-button [matMenuTriggerFor]="menu">FYear </button>
+        <mat-menu #menu="matMenu">
+        <button mat-menu-item>2017-18</button>
+        <button mat-menu-item>2018-19</button>
+        </mat-menu>
+      
+        <!-- <div style= "width:10%" class= "mat-small mat-caption" >
         <mat-form-field appearance="fill" style="margin-top:1.2em" >
+        <mat-label>FYear</mat-label>
+        <mat-select [(ngModel)]="fyear_val">
+          <mat-option  *ngFor="let fyear of fyears"  [value]="fyear.id">
+            {{fyear.name}}
+          </mat-option>
+        </mat-select>
+        </mat-form-field>
+        </div> -->
+        <!-- <mat-form-field appearance="fill" style="margin-top:1.2em" >
           <mat-label>FYear</mat-label>
           <mat-select [(ngModel)]="fyear_val">
             <mat-option  *ngFor="let fyear of fyears"  [value]="fyear.id">
@@ -18,9 +48,20 @@
             </mat-option>
           </mat-select>
           <mat-hint align="end">Select Financial year</mat-hint>
-        </mat-form-field>
-        <a mat-button [routerLink]="'/accounts'"> Hello Neeraj </a>
+        </mat-form-field> -->
+      
         </div>
+    </mat-toolbar-row>
+      
+    <mat-toolbar-row  *ngIf="deviceXs" fxLayoutAlign="space-between center">
+        
+            <a mat-button [routerLink]="'/dashboard'"> Dashboard </a>
+            <a mat-button [routerLink]="'/create-invoice'"> Create Invoice </a>
+        <button mat-button [matMenuTriggerFor]="menu">FYear </button>
+        <mat-menu #menu="matMenu">
+        <button mat-menu-item>2017-18</button>
+        <button mat-menu-item>2018-19</button>
+        </mat-menu>
 
     </mat-toolbar-row>
   </mat-toolbar>
