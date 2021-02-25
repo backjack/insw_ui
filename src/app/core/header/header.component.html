@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+    
+      <h1>INSW</h1>
+      <span class="menu-spacer"></span>
+      <div>
+        <a mat-button [routerLink]="'/accounts'"> Dashboard </a>
+        <a mat-button [routerLink]="'/create-account'"> Create Invoice </a>
+
+      </div>
+      
+      <div style= "width:40%" class= "mat-small mat-caption" >
+        <mat-form-field appearance="fill" style="margin-top:1.2em" >
+          <mat-label>FYear</mat-label>
+          <mat-select [(ngModel)]="fyear_val">
+            <mat-option  *ngFor="let fyear of fyears"  [value]="fyear.id">
+              {{fyear.name}}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Select Financial year</mat-hint>
+        </mat-form-field>
+        <a mat-button [routerLink]="'/accounts'"> Hello Neeraj </a>
+        </div>
+
+    </mat-toolbar-row>
+  </mat-toolbar>
