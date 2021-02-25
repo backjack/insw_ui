@@ -1,4 +1,4 @@
-<div class="create_invoice" style="display:flex;flex-direction: column;">
+<div class="create_invoice" flexLayout="column" style="display:flex;flex-direction: column;">
   
     <div class="panel" style="flex:auto;margin:10px">
         <mat-card class="mat-elevation-z8">
@@ -57,86 +57,89 @@
             </mat-card-content>
           </mat-card>
     </div>
-    <div class="items_grid" style="flex:auto;margin:10px">
-       <button mat-button (click)="openDialog('Add',{})" 
-        style="margin:10px;float:left;"mat-flat-button color="primary">Add Item</button>
-        <button mat-button (click)="refresh()" 
-        style="margin:10px;float:left;"mat-flat-button color="primary">Refresh</button>
+    
+    <div class="items_grid" fxLayout="column" fxLayoutGap="10px" style="width:100%; margin:0 10px 0">
+        <div>
+           <button mat-button (click)="openDialog('Add',{})" 
+          style="margin:10px;float:left;"mat-flat-button color="primary">Add Item</button>
+          <button mat-button (click)="refresh()" 
+          style="margin:10px;float:left;"mat-flat-button color="primary">Refresh</button>
+        </div>
         
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width:100%">
+        <mat-table [dataSource]="dataSource" class="mat-elevation-z8" >
 
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
           
             <!-- Position Column -->
             <ng-container matColumnDef="no">
-              <th mat-header-cell *matHeaderCellDef> Sr.no </th>
-              <td mat-cell *matCellDef="let element"> {{element.no}} </td>
+              <mat-header-cell *matHeaderCellDef> Sr.no </mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="No"> {{element.no}} </mat-cell>
             </ng-container>
           
             <!-- Name Column -->
             <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef> Description </th>
-              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+              <mat-cell *matCellDef="let element"  data-label="Description"> {{element.name}}  </mat-cell>
             </ng-container>
           
             <!-- Weight Column -->
             <ng-container matColumnDef="price">
-              <th mat-header-cell *matHeaderCellDef> Price </th>
-              <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+              <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+              <mat-cell *matCellDef="let element"  data-label="Price"> {{element.price}}  </mat-cell>
             </ng-container>
 
             <!-- Weight Column -->
             <ng-container matColumnDef="qty">
-              <th mat-header-cell *matHeaderCellDef> Qty </th>
-              <td mat-cell *matCellDef="let element"> {{element.qty}} </td>
+              <mat-header-cell *matHeaderCellDef> Qty </mat-header-cell>
+              <mat-cell *matCellDef="let element"  data-label="Qty"> {{element.qty}}  </mat-cell>
             </ng-container>
           
            <!-- Weight Column -->
            <ng-container matColumnDef="non_tax">
-            <th mat-header-cell *matHeaderCellDef> Non Tax Amount </th>
-            <td mat-cell *matCellDef="let element"> {{element.non_tax_amt}} </td>
+            <mat-header-cell *matHeaderCellDef> Non Tax Amount </mat-header-cell>
+            <mat-cell *matCellDef="let element"  data-label="Non Tax Amount"> {{element.non_tax_amt}}  </mat-cell>
           </ng-container>
 
              <!-- Weight Column -->
              <ng-container matColumnDef="igst">
-              <th mat-header-cell *matHeaderCellDef>IGST </th>
-              <td mat-cell *matCellDef="let element"> {{element.igst}} </td>
+              <mat-header-cell *matHeaderCellDef>IGST </mat-header-cell>
+              <mat-cell *matCellDef="let element"  data-label="IGST"> {{element.igst}}  </mat-cell>
             </ng-container>
 
               <!-- Weight Column -->
               <ng-container matColumnDef="cgst">
-                <th mat-header-cell *matHeaderCellDef>CGST </th>
-                <td mat-cell *matCellDef="let element"> {{element.cgst}} </td>
+                <mat-header-cell *matHeaderCellDef>CGST </mat-header-cell>
+                <mat-cell *matCellDef="let element"  data-label="CGST"> {{element.cgst}}  </mat-cell>
               </ng-container>
 
                 <!-- Weight Column -->
              <ng-container matColumnDef="sgst">
-              <th mat-header-cell *matHeaderCellDef>SGST </th>
-              <td mat-cell *matCellDef="let element"> {{element.sgst}} </td>
+              <mat-header-cell *matHeaderCellDef>SGST </mat-header-cell>
+              <mat-cell *matCellDef="let element"  data-label="SGST"> {{element.sgst}}  </mat-cell>
             </ng-container>
             <ng-container matColumnDef="tax_amt">
-              <th mat-header-cell *matHeaderCellDef>Tax Amount </th>
-              <td mat-cell *matCellDef="let element"> {{element.tax_amt}} </td>
+              <mat-header-cell *matHeaderCellDef>Tax Amount </mat-header-cell>
+              <mat-cell *matCellDef="let element"  data-label="Tax Amount"> {{element.tax_amt}}  </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="total_amt">
-              <th mat-header-cell *matHeaderCellDef>Total Amount </th>
-              <td mat-cell *matCellDef="let element"> {{element.total_amt}} </td>
+              <mat-header-cell *matHeaderCellDef>Total Amount </mat-header-cell>
+              <mat-cell *matCellDef="let element"  data-label="Total Amount"> {{element.total_amt}} </mat-cell>
             </ng-container>
 
              <!-- Action Column -->
             <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef> Action </th>
-              <td mat-cell *matCellDef="let element" class="action-link"> 
+              <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="action-link"  data-label="Action"> 
                 <a (click)="openDialog('Update',element)">Edit</a> | 
                 <a (click)="deleteRowData(element)">Delete</a>  
-              </td>
+              </mat-cell>
             </ng-container>
           
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
           <div class="notfound" *ngIf="dataSource.length==0">
             <h2> No Records found</h2>
          </div>
