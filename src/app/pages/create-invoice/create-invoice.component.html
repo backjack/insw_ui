@@ -1,4 +1,4 @@
-<div class="create_invoice" flexLayout="column" style="display:flex;flex-direction: column;">
+<div class="create_invoice" flexLayout="column" >
   
     <div class="panel" style="flex:auto;margin:10px">
         <mat-card class="mat-elevation-z8">
@@ -58,15 +58,16 @@
           </mat-card>
     </div>
     
-    <div class="items_grid" fxLayout="column" fxLayoutGap="10px" style="width:100%; margin:0 10px 0">
+    <div class="items_grid" fxLayout="column" style="width:100%;padding:10px">
         <div>
            <button mat-button (click)="openDialog('Add',{})" 
           style="margin:10px;float:left;"mat-flat-button color="primary">Add Item</button>
           <button mat-button (click)="refresh()" 
           style="margin:10px;float:left;"mat-flat-button color="primary">Refresh</button>
         </div>
-        
-        <mat-table [dataSource]="dataSource" class="mat-elevation-z8" >
+
+        <div class=" mat-elevation-z8" style="overflow-y:scroll">
+          <mat-table [dataSource]="dataSource">
 
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
@@ -142,6 +143,7 @@
         </mat-table>
           <div class="notfound" *ngIf="dataSource.length==0">
             <h2> No Records found</h2>
+         </div>
          </div>
           
     </div>

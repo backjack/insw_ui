@@ -11,11 +11,16 @@ export class HeaderComponent implements OnInit {
 
   @Input() deviceXs: boolean;
 
-  fyears =[ {id:2020,name:"2019-20"},{id:2021,name:"2020-21"}]
+  fyYears =[ "2020","2021","2022"]
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  selectedFyear(option) {
+
+    this.fyear_val = option;
   }
 
 }

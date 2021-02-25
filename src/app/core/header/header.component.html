@@ -24,10 +24,12 @@
         
          
         <a mat-button [routerLink]="'/accounts'"> Hello Neeraj </a>
-        <button mat-button [matMenuTriggerFor]="menu">FYear </button>
-        <mat-menu #menu="matMenu">
-        <button mat-menu-item>2017-18</button>
-        <button mat-menu-item>2018-19</button>
+        <button mat-button [matMenuTriggerFor]="menu">FYear {{fyear_val}} </button>
+        <mat-menu #menu="matMenu" >
+          <button (click)="selectedFyear(fyYear)" *ngFor="let fyYear of fyYears"  mat-menu-item>
+            {{fyYear}}
+        </button>
+        
         </mat-menu>
       
         <!-- <div style= "width:10%" class= "mat-small mat-caption" >
@@ -53,14 +55,15 @@
         </div>
     </mat-toolbar-row>
       
-    <mat-toolbar-row  *ngIf="deviceXs" fxLayoutAlign="space-between center">
+      <mat-toolbar-row  *ngIf="deviceXs" fxLayoutAlign="space-between center">
         
             <a mat-button [routerLink]="'/dashboard'"> Dashboard </a>
             <a mat-button [routerLink]="'/create-invoice'"> Create Invoice </a>
-        <button mat-button [matMenuTriggerFor]="menu">FYear </button>
-        <mat-menu #menu="matMenu">
-        <button mat-menu-item>2017-18</button>
-        <button mat-menu-item>2018-19</button>
+        <button mat-button [matMenuTriggerFor]="menu">FYear {{fyear_val}}</button>
+        <mat-menu #menu="matMenu" >
+          <button (click)="selectedFyear(fyYear)" *ngFor="let fyYear of fyYears"  mat-menu-item>
+            {{fyYear}}
+          </button>
         </mat-menu>
 
     </mat-toolbar-row>
