@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
     const dialogRef = this.dialog.open(CreateInvoiceComponent, {
       width: '100%',
       height: '700px',
-      data: row
+      data: {row:row, update:true}
     });
 
     

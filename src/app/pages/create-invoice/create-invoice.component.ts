@@ -20,7 +20,7 @@ export class CreateInvoiceComponent implements OnInit {
   @ViewChild(MatTable,{static:true}) table: MatTable<any>;
   total_amt:number =0;
   priceWords:string;
-  update:boolean =true;
+  update:boolean = false;
   client_option = [{id:"1",name:"ABC"},{id:"2",name:"PQR"},{id:"3",name:"XYZ"}]
   invoiceSummary:InvoiceSummary;
   
@@ -46,7 +46,8 @@ export class CreateInvoiceComponent implements OnInit {
 
         if(this.dialogData != null) {
 
-          this.invoiceSummary = this.dialogData;
+          this.invoiceSummary = this.dialogData.row;
+          this.update = this.dialogData.update;
         } else {
 
           this.invoiceSummary = new InvoiceSummary();

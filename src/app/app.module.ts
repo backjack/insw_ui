@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import {CustomDatePipe} from './common/custom.datepipe';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './core/header/header.component';
@@ -18,7 +18,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
     BodyComponent,
     CreateInvoiceComponent,
     DialogBoxComponent,
-    DashboardComponent
+    DashboardComponent,
+    CustomDatePipe
   ],
   imports: [
     BrowserModule,
