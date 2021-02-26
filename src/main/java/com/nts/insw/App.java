@@ -6,6 +6,7 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
 @EnableAutoConfiguration
+@SpringBootApplication
 public class App {
 
   public static void main(String[] args) throws Exception {

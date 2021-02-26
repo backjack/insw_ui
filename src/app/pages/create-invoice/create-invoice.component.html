@@ -3,14 +3,14 @@
     <div class="panel" style="flex:auto;margin:10px">
         <mat-card class="mat-elevation-z8">
             <mat-card-header>
-              <mat-card-title>Invoice Header</mat-card-title>
+              <mat-card-title>Invoice Summary</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <div class="example-container">
 
                 <mat-form-field appearance="fill"  *ngIf="update">
                   <mat-label>Invoice No</mat-label>
-                  <input matInput type="text" [(ngModel)]="invoiceSummary.invoiceId">
+                  <input matInput type="text" [(ngModel)]="invoiceSummary.invoiceId" [disabled]=true>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
@@ -31,9 +31,10 @@
                 
                 <mat-form-field appearance="fill">
                   <mat-label>Choose a Invoice date</mat-label>
-                  <input matInput [matDatepicker]="picker"  (dateChange)="changeEvent($event)">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
+                  <input matInput [matDatepicker]="picker"  (dateChange)="changeEvent($event)" 
+                  [(ngModel)] ="invoiceSummary.invoiceDate">
+                  <mat-datepicker-toggle matSuffix [for]="picker" ></mat-datepicker-toggle>
+                  <mat-datepicker #picker ></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">

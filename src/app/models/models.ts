@@ -52,11 +52,11 @@ export class InvoiceItem implements Item {
    
     public name: string;
     no?:number;
-    qty?: number;
-    sgst?:number;
-    igst?:number;
-    cgst?:number;
-    price?:number;
+    qty?: number = 0;
+    sgst?:number =0;
+    igst?:number =0;
+    cgst?:number = 0;
+    price?:number =0;
 
     constructor(name:string,no:number,qty:number,sgst:number,igst:number,cgst:number,price:number) {
          

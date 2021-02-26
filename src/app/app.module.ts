@@ -11,6 +11,7 @@ import { CreateInvoiceComponent } from './pages/create-invoice/create-invoice.co
 import { DialogBoxComponent } from './core/dialog-box/dialog-box.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import {FlexLayoutModule}  from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {FlexLayoutModule}  from '@angular/flex-layout';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

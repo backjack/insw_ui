@@ -5,6 +5,7 @@ import { DialogBoxComponent } from '../../core/dialog-box/dialog-box.component';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {InvoiceItem, InvoiceSummary} from '../../models/models';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {InvoiceService} from '../../services/invoice.service';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class CreateInvoiceComponent implements OnInit {
 
     private dialogRef = null;
     private dialogData;
-    constructor(public dialog: MatDialog,private injector: Injector) {
+    constructor(public dialog: MatDialog,private injector: Injector,private invoiceService:InvoiceService) {
         this.dialogRef = this.injector.get(MatDialogRef, null);
         this.dialogData = this.injector.get(MAT_DIALOG_DATA, null);
         console.log(this.dialogData )
@@ -48,9 +49,29 @@ export class CreateInvoiceComponent implements OnInit {
 
           this.invoiceSummary = this.dialogData.row;
           this.update = this.dialogData.update;
+     
+          this.invoiceService.getInvoiceItems(this.dialogData.row.fyear,
+            this.dialogData.row.invoiceId).subscribe(x=>{
+            
+              let items = Array<InvoiceItem>();
+              let counter =1;
+              x.forEach( y =>{
+
+                let item = new InvoiceItem(y.name,counter,y.qty,y.sgst,y.igst,y.cgst,y.price); 
+                 counter = counter +1;
+                items.push(item);
+              })
+
+            this.loaded_data = items;
+            this.dataSource = items;
+            this.updateTotalAmt();
+            this.price_in_words(this.total_amt);
+          })
         } else {
 
           this.invoiceSummary = new InvoiceSummary();
+
+          
         }
 
 
@@ -58,10 +79,10 @@ export class CreateInvoiceComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // let item = new InvoiceItem("Temp",1,10,50,0,10,300);
-    // this.loaded_data = [item];
-    //this.dataSource = this.loaded_data;
-    //this.sortDataSource();
+    this.invoiceService.getClients().subscribe(x =>{
+ 
+        console.log(x);
+    });
   }
 
 
