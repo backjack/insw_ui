@@ -1,9 +1,7 @@
 package com.nts.insw.repo;
 
-import com.nts.insw.dao.InvoiceId;
 import com.nts.insw.dao.InvoiceItem;
 import com.nts.insw.dao.InvoiceItemId;
-import com.nts.insw.dao.InvoiceSummary;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
