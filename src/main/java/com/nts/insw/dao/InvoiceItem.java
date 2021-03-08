@@ -1,20 +1,35 @@
 package com.nts.insw.dao;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name="invoice_item")
+@IdClass(InvoiceItemId.class)
 public class InvoiceItem {
 
-//  public name: string;
-//  no?:number;
-//  qty?: number;
-//  sgst?:number;
-//  igst?:number;
-//  cgst?:number;
-//  price?:number;
 
-  public String getInvoiceId() {
+
+  public int getInvoiceId() {
     return invoiceId;
   }
 
-  public void setInvoiceId(String invoiceId) {
+  @Override
+  public String toString() {
+    return "InvoiceItem{" +
+      "invoiceId=" + invoiceId +
+      ", fyear=" + fyear +
+      ", itemId=" + itemId +
+      ", itemName='" + itemName + '\'' +
+      ", qty=" + qty +
+      ", sgst=" + sgst +
+      ", cgst=" + cgst +
+      ", igst=" + igst +
+      ", price=" + price +
+      '}';
+  }
+
+  public void setInvoiceId(int invoiceId) {
     this.invoiceId = invoiceId;
   }
 
@@ -26,36 +41,48 @@ public class InvoiceItem {
     this.fyear = fyear;
   }
 
-  public String invoiceId;
 
+  @Id
+  @Column(name="invoiceId")
+  public int invoiceId;
 
+  @Id
+  @Column(name="fyear")
   public int fyear;
 
-  public long itemid;
 
-  public String name;
+  @Column(name="itemId")
+  public long itemId;
 
+  public String getItemName() {
+    return itemName;
+  }
+
+  public void setItemName(String itemName) {
+    this.itemName = itemName;
+  }
+
+  @Id
+  @Column(name="itemName")
+  public String itemName;
+
+  @Column(name="qty")
   public int qty;
 
-  public double sgst;
+  @Column(name="sgst")
+  public Double sgst;
 
-  public double cgst;
+  @Column(name="cgst")
+  public Double cgst;
 
-  public long getItemid() {
-    return itemid;
+  public long getItemId() {
+    return itemId;
   }
 
-  public void setItemid(long itemid) {
-    this.itemid = itemid;
+  public void setItemId(long itemId) {
+    this.itemId = itemId;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
 
   public int getQty() {
     return qty;
@@ -65,27 +92,27 @@ public class InvoiceItem {
     this.qty = qty;
   }
 
-  public double getSgst() {
+  public Double getSgst() {
     return sgst;
   }
 
-  public void setSgst(double sgst) {
+  public void setSgst(Double sgst) {
     this.sgst = sgst;
   }
 
-  public double getCgst() {
+  public Double getCgst() {
     return cgst;
   }
 
-  public void setCgst(double cgst) {
+  public void setCgst(Double cgst) {
     this.cgst = cgst;
   }
 
-  public double getIgst() {
+  public Double getIgst() {
     return igst;
   }
 
-  public void setIgst(double igst) {
+  public void setIgst(Double igst) {
     this.igst = igst;
   }
 
@@ -97,8 +124,16 @@ public class InvoiceItem {
     this.price = price;
   }
 
-  public double igst;
+  @Column(name="igst")
+  public Double igst;
 
+  @Column(name="price")
   public double price;
 
+
+  @Transient
+  public String isActive;
+
+  @Column(name="updatedOn")
+  public Date updatedOn;
 }

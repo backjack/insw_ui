@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,HttpParams} from '@angular/common/http'; 
-import { InvoiceItem } from '../models/models';
+import { InvoiceItem,Invoice } from '../models/models';
 import  {Observable,Subject } from 'rxjs';
 
 @Injectable({
@@ -8,8 +8,16 @@ import  {Observable,Subject } from 'rxjs';
 })
 export class InvoiceService {
 
+  private fyearSource = new Subject<string>();
+  fyearSource$ = this.fyearSource.asObservable();
+
   constructor(private http:HttpClient) { }
 
+  
+  onFyearChange(fyear:string) {
+
+    this.fyearSource.next(fyear);
+  }
 
 
   getInvoiceItems(fyear :string,invoiceId:string):Observable<InvoiceItem[]> {
@@ -25,5 +33,11 @@ export class InvoiceService {
   getClients():Observable<any[]> {
 
     return  this.http.get<InvoiceItem[]>("/insw/clients");
+  }
+
+
+  saveInvoice(invoice:Invoice): Observable<any>{
+
+    return this.http.post<any>("/insw/invoice/save",invoice);
   }
 }

@@ -17,7 +17,7 @@
                   <mat-label>Client</mat-label>
                   <mat-select [(ngModel)]="invoiceSummary.clientId">
                     <mat-option  *ngFor="let client of client_option"  [value]="client.id">
-                      {{client.name}}
+                      {{client.value}}
                     </mat-option>
                   </mat-select>
                   <mat-hint align="end">Select Client Name</mat-hint>
@@ -82,25 +82,25 @@
             <!-- Name Column -->
             <ng-container matColumnDef="description">
               <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-              <mat-cell *matCellDef="let element"  data-label="Description"> {{element.name}}  </mat-cell>
+              <mat-cell *matCellDef="let element"  data-label="Description"> {{element.itemName}}  </mat-cell>
             </ng-container>
           
             <!-- Weight Column -->
             <ng-container matColumnDef="price">
               <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
-              <mat-cell *matCellDef="let element"  data-label="Price"> {{element.price}}  </mat-cell>
+              <mat-cell *matCellDef="let element"  data-label="Price"> {{element.price | number:'1.2-2'}}  </mat-cell>
             </ng-container>
 
             <!-- Weight Column -->
             <ng-container matColumnDef="qty">
               <mat-header-cell *matHeaderCellDef> Qty </mat-header-cell>
-              <mat-cell *matCellDef="let element"  data-label="Qty"> {{element.qty}}  </mat-cell>
+              <mat-cell *matCellDef="let element"  data-label="Qty"> {{element.qty | number:'1.2-2'}}  </mat-cell>
             </ng-container>
           
            <!-- Weight Column -->
            <ng-container matColumnDef="non_tax">
             <mat-header-cell *matHeaderCellDef> Non Tax Amount </mat-header-cell>
-            <mat-cell *matCellDef="let element"  data-label="Non Tax Amount"> {{element.non_tax_amt}}  </mat-cell>
+            <mat-cell *matCellDef="let element"  data-label="Non Tax Amount"> {{element.non_tax_amt | number:'1.2-2'}}  </mat-cell>
           </ng-container>
 
              <!-- Weight Column -->
@@ -122,12 +122,12 @@
             </ng-container>
             <ng-container matColumnDef="tax_amt">
               <mat-header-cell *matHeaderCellDef>Tax Amount </mat-header-cell>
-              <mat-cell *matCellDef="let element"  data-label="Tax Amount"> {{element.tax_amt}}  </mat-cell>
+              <mat-cell *matCellDef="let element"  data-label="Tax Amount"> {{element.tax_amt| number:'1.2-2'}}  </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="total_amt">
               <mat-header-cell *matHeaderCellDef>Total Amount </mat-header-cell>
-              <mat-cell *matCellDef="let element"  data-label="Total Amount"> {{element.total_amt}} </mat-cell>
+              <mat-cell *matCellDef="let element"  data-label="Total Amount"> {{element.total_amt | number:'1.2-2'}} </mat-cell>
             </ng-container>
 
              <!-- Action Column -->
@@ -156,7 +156,7 @@
         </mat-card-header>
         <mat-card-content>
           
-          <span class="mat-body mat-body-1">Total Value is Rs {{total_amt}}</span>
+          <span class="mat-body mat-body-1">Total Value is Rs {{total_amt | number:'1.2-2'}}</span>
           <p></p>
           <span class="mat-body mat-body-1">Total Value in words Rs <b>{{priceWords}} </b></span>
 

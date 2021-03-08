@@ -18,6 +18,14 @@ export class DashboardService {
     this.messageSource.next(fyear);
   }
 
+  deleteInvoice(fyear:string,invoiceId:number):Observable<string> {
+
+    let opts =  new HttpParams() ;
+    opts = opts.append('fyear', ""+fyear);
+    opts = opts.append('invoiceId', ""+invoiceId);
+    return this.http.get<string>("/insw/invoice/delete", {params:opts});
+  }
+
 
   getInvoiceSummary(fyyear:string):Observable<InvoiceSummary[]> {
     

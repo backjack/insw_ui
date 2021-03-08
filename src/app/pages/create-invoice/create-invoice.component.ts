@@ -1,11 +1,13 @@
-import { Component, OnInit, ViewChild,Inject,Injector } from '@angular/core';
+import { Component, OnInit, ViewChild,Inject,Injector, Input } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogBoxComponent } from '../../core/dialog-box/dialog-box.component';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {InvoiceItem, InvoiceSummary} from '../../models/models';
+import {InvoiceItem, InvoiceSummary,Invoice} from '../../models/models';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {InvoiceService} from '../../services/invoice.service';
+import { ActivatedRoute } from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -17,38 +19,38 @@ export class CreateInvoiceComponent implements OnInit {
 
   displayedColumns: string[] = ['no', 'description', 'price', 'qty','non_tax','igst','cgst','sgst','tax_amt','total_amt','action'];
   loaded_data : InvoiceItem[] = [];
+  original_data : InvoiceItem[] = [];
   dataSource: InvoiceItem[] = [];
+  finalDataSource: InvoiceItem[] = [];
   @ViewChild(MatTable,{static:true}) table: MatTable<any>;
   total_amt:number =0;
   priceWords:string;
   update:boolean = false;
-  client_option = [{id:"1",name:"ABC"},{id:"2",name:"PQR"},{id:"3",name:"XYZ"}]
+  client_option:any[] = [];
   invoiceSummary:InvoiceSummary;
+
+  fyyear:string;
   
   
-  // constructor(public dialog: MatDialog) {
-
-  // }
-
-  // constructor(public dialog: MatDialog,
-  //   public dialogRef: MatDialogRef<DialogBoxComponent>,
-  //   @Inject(MAT_DIALOG_DATA)  dataSource: InvoiceItem[]) {
-
-  //      this.dataSource = dataSource;
-  //      console.log(dataSource)
-  //   }
+  
 
     private dialogRef = null;
     private dialogData;
-    constructor(public dialog: MatDialog,private injector: Injector,private invoiceService:InvoiceService) {
+    constructor(public dialog: MatDialog,private injector: Injector,private invoiceService:InvoiceService,
+      private _Activatedroute:ActivatedRoute,private _snackBar: MatSnackBar) {
         this.dialogRef = this.injector.get(MatDialogRef, null);
         this.dialogData = this.injector.get(MAT_DIALOG_DATA, null);
-        console.log(this.dialogData )
+        this.fyyear = this._Activatedroute.snapshot.queryParamMap.get("fyear");
+
+    
 
         if(this.dialogData != null) {
 
           this.invoiceSummary = this.dialogData.row;
+          console.log(this.invoiceSummary);
           this.update = this.dialogData.update;
+
+         
      
           this.invoiceService.getInvoiceItems(this.dialogData.row.fyear,
             this.dialogData.row.invoiceId).subscribe(x=>{
@@ -57,19 +59,27 @@ export class CreateInvoiceComponent implements OnInit {
               let counter =1;
               x.forEach( y =>{
 
-                let item = new InvoiceItem(y.name,counter,y.qty,y.sgst,y.igst,y.cgst,y.price); 
+                let item = new InvoiceItem(y.itemName,counter,y.qty,y.sgst,y.igst,y.cgst,y.price); 
                  counter = counter +1;
                 items.push(item);
               })
 
             this.loaded_data = items;
             this.dataSource = items;
+            this.original_data = items;
             this.updateTotalAmt();
             this.price_in_words(this.total_amt);
           })
         } else {
 
           this.invoiceSummary = new InvoiceSummary();
+          this.invoiceSummary.fyear =  +this.fyyear;
+          console.log("!!!!!!!!!!!!!!"+this.fyyear);
+          
+          this.invoiceService.fyearSource$.subscribe(x =>{
+            console.log("#%%%%%%%%%%%%%%%%%%%%%%%%%%" + x);
+            this.invoiceSummary.fyear = +x;
+          })
 
           
         }
@@ -81,7 +91,7 @@ export class CreateInvoiceComponent implements OnInit {
 
     this.invoiceService.getClients().subscribe(x =>{
  
-        console.log(x);
+      this.client_option =x;
     });
   }
 
@@ -101,7 +111,7 @@ export class CreateInvoiceComponent implements OnInit {
 
    openDialog(action:string,row_obj:InvoiceItem) {
      
-    let item = new InvoiceItem(row_obj.name,row_obj.no,row_obj.qty,row_obj.sgst,row_obj.igst,row_obj.cgst,row_obj.price);
+    let item = new InvoiceItem(row_obj.itemName,row_obj.no,row_obj.qty,row_obj.sgst,row_obj.igst,row_obj.cgst,row_obj.price);
     
       const dialogRef = this.dialog.open(DialogBoxComponent, {
         width: '500px',
@@ -109,7 +119,7 @@ export class CreateInvoiceComponent implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {
-  
+    
       if(action == 'Add'){
 
         this.sortDataSource()
@@ -122,62 +132,113 @@ export class CreateInvoiceComponent implements OnInit {
 
         this.addRowData(result,no);
       } else if(action=='Update') {
+
+        console.log("################@@@@edit");
          this.updateRowData(result);
       }
     });
   }
 
-  addRowData(row_obj:InvoiceItem,no:number){
-
-    let newItem = new InvoiceItem(row_obj.name,no,row_obj.qty,row_obj.sgst,row_obj.igst,row_obj.cgst,row_obj.price);
-    this.dataSource.push(newItem);
-    this.updateTotalAmt();
-    this.price_in_words(this.total_amt);
-    this.table.renderRows();
-    
-  }
-
   updateTotalAmt(){
 
-     this.total_amt = 0;
-     this.dataSource.forEach(x  => {
-       this.total_amt = this.total_amt + x.total_amt;
-     });
+    this.total_amt = 0;
+    this.dataSource.filter(x=> x.isActive =="Y").forEach(x  => {
+      this.total_amt = this.total_amt + x.total_amt;
+    });
 
-     this.total_amt = Math.round(this.total_amt);
-  }
+    this.total_amt = Math.round(this.total_amt);
+ }
 
-  updateRowData(row_obj:InvoiceItem){
-    this.dataSource = this.dataSource.filter((value,key)=>{
-      if(value.no == row_obj.no){
-           return true;
+
+  addRowData(row_obj:InvoiceItem,no:number){
+    console.log(no);
+    let newItem = new InvoiceItem(row_obj.itemName,no,row_obj.qty,row_obj.sgst,row_obj.igst,row_obj.cgst,row_obj.price);
+    this.loaded_data.push(newItem);
+    this.dataSource = this.loaded_data.filter(val=>{
+
+      if(val.isActive=="Y") {
+        return  true;
       }
       return false;
+   });
+    this.updateTotalAmt();
+    this.price_in_words(this.total_amt);
+    this.table.renderRows();
+  }
+
+ 
+
+  updateRowData(row_obj:InvoiceItem){
+   
+    this.loaded_data.forEach((x,index )=>{
+
+      if(x.no == row_obj.no){
+         x.isActive="N";
+         return;
+        }
     });
-    this.dataSource.push(row_obj);
+    this.loaded_data.push(row_obj);
+    this.dataSource = this.loaded_data.filter(val=>{
+
+       if(val.isActive=="Y") {
+         return  true;
+       }
+       return false;
+    });
     this.updateTotalAmt();
     this.price_in_words(this.total_amt);
     this.table.renderRows();
 
   }
+
   deleteRowData(row_obj){
-    this.dataSource = this.dataSource.filter(obj => obj.no !== row_obj.no);
+   this.loaded_data.forEach((x,index )=>{
+
+      if(x.no == row_obj.no){
+         x.isActive="N";
+         return;
+        }
+    });
+
+    this.dataSource = this.loaded_data.filter(val=>{
+
+      if(val.isActive=="Y") {
+        return  true;
+      }
+      return false;
+   });
+
+    this.updateTotalAmt();
+    this.price_in_words(this.total_amt);
+    this.table.renderRows();
   }
 
   refresh() {
-    this.dataSource = this.loaded_data;
+    this.dataSource = this.original_data;
   }
 
 
   changeEvent(event){
-    
     this.invoiceSummary.invoiceDate = event.value;
   }
 
   submit() {
-     
-     console.log(this.invoiceSummary);
-     console.log(this.dataSource);
+    
+    const invoice: Invoice = {
+      invoiceSummary:this.invoiceSummary,
+      invoiceItems:this.loaded_data
+   };
+
+   invoice.invoiceSummary.totalAmount  = this.total_amt;
+    
+
+     this.invoiceService.saveInvoice(invoice).subscribe(data=> {
+
+      this._snackBar.open(data['success'],"Saved", {
+        duration: 2000,
+      });
+        
+     });
 
   }
 

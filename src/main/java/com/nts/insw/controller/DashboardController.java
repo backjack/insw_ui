@@ -1,19 +1,29 @@
 package com.nts.insw.controller;
 
 
-import com.nts.insw.dao.InvoiceItem;
-import com.nts.insw.dao.InvoiceSummary;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.nts.insw.dao.*;
+import com.nts.insw.repo.ClientRepo;
+import com.nts.insw.repo.InvoiceItemRepo;
+import com.nts.insw.repo.InvoiceSummaryRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/insw")
 public class DashboardController {
 
+  @Autowired
+  private ClientRepo clientRepo;
+
+  @Autowired
+  private InvoiceSummaryRepo invoiceSummaryRepo;
+
+  @Autowired
+  private InvoiceItemRepo invoiceItemRepo;
 
   @GetMapping("/fy/current")
   public int getCurrentYear() {
@@ -33,61 +43,126 @@ public class DashboardController {
   @GetMapping("/invoice/summary")
   public List<InvoiceSummary> getinvoiceSummary(@RequestParam("fyear") int fyear){
 
-    List<InvoiceSummary> invoiceSummaryList = new ArrayList<>();
+    List<InvoiceSummary> invoices = invoiceSummaryRepo.findInvoiceSummaryByfyear(fyear);
+     List<Client> clientList = clientRepo.findAll();
+
+    Comparator<InvoiceSummary>  comp = new Comparator<InvoiceSummary>() {
+      @Override
+      public int compare(InvoiceSummary o1, InvoiceSummary o2) {
+        return Integer.compare(o1.getInvoiceId(), o2.getInvoiceId());
+      }
+    };
+
+    invoices = invoices.stream().sorted(comp.reversed()).collect(Collectors.toList());
+
+    invoices.forEach(x->{
+
+      Client client = clientList.stream().filter(c -> c.getClientId().equals(x.getClientId())).findFirst().get();
+      x.setClientName(client.getClientName());
+
+    });
 
 
-    InvoiceSummary invoiceSummary = new InvoiceSummary();
-
-    if(fyear == 2020) {
-      invoiceSummary.setFyear(2020);
-      invoiceSummary.setClientId("123");
-      invoiceSummary.setClientName("ABp Shipping Ltd");
-      invoiceSummary.setInvoiceDate(new Date());
-      invoiceSummary.setInvoiceId("110");
-      invoiceSummary.setQuotationNo("1233");
-      invoiceSummary.setTotalAmount(240000);
-    }else {
-      invoiceSummary.setFyear(fyear);
-      invoiceSummary.setClientId("200");
-      invoiceSummary.setClientName("Facebook Ltd");
-      invoiceSummary.setInvoiceDate(new Date());
-      invoiceSummary.setInvoiceId("234");
-      invoiceSummary.setQuotationNo("145");
-      invoiceSummary.setTotalAmount(56780);
-    }
-
-    invoiceSummaryList.add(invoiceSummary);
-
-    return invoiceSummaryList;
+    return invoices;
   }
 
   @GetMapping("/clients")
-  public Map<Integer,String> getClients() {
+  public List<Select> getClients() {
 
-    Map<Integer,String> clients = new HashMap<>();
-    clients.put(123,"ABp Shipping Ltd");
-    clients.put(100,"Google Ltd");
-    clients.put(200,"Facebook Ltd");
-    return clients;
+       List<Select> selectList = new ArrayList<>();
+       List<Client> clients = clientRepo.findAll();
+
+       clients.forEach(x->{
+
+         selectList.add(new Select<Integer,String>(x.getClientId(),x.getClientShortName()));
+         });
+
+
+      return selectList;
   }
 
   @GetMapping("/invoice/items")
   public List<InvoiceItem>  getInvoiceItems(@RequestParam("fyear") int fyear,
-                                            @RequestParam("invoiceId") String invoiceId) {
+                                            @RequestParam("invoiceId") int invoiceId) {
 
-    List<InvoiceItem> items = new ArrayList<>();
-
-    InvoiceItem item1= new InvoiceItem();
-    item1.setFyear(fyear);
-    item1.setInvoiceId(invoiceId);
-    item1.setItemid(123);
-    item1.setName("TugBoat");
-    item1.setPrice(20999);
-    item1.setSgst(18);
-    item1.setQty(20);
-    items.add(item1);
+    List<InvoiceItem> items = invoiceItemRepo.findInvoiceItemsByfyearAndInvoiceId(fyear,invoiceId);
 
     return items;
+  }
+
+
+  @GetMapping("/invoice/delete")
+  @Transactional
+  public String deleteInvoice(@RequestParam("fyear") int fyear,
+                              @RequestParam("invoiceId") int invoiceId) {
+
+    List<InvoiceItem> items = invoiceItemRepo.findInvoiceItemsByfyearAndInvoiceId(fyear,invoiceId);
+
+    items.forEach(x->{
+      invoiceItemRepo.delete(x);
+    });
+
+    InvoiceSummary summary = invoiceSummaryRepo.findInvoiceSummaryByfyearAndInvoiceId(fyear,invoiceId);
+    invoiceSummaryRepo.delete(summary);
+
+    return "success";
+  }
+
+  @PostMapping("/invoice/save")
+  @Transactional
+  public Map<String,String>  saveInvoice(@RequestBody Invoice invoice) {
+
+
+    Integer invoiceId = invoice.getInvoiceSummary().getInvoiceId();
+    System.out.println(invoice);
+    System.out.printf("hlllllllllllllllll");
+    if(invoiceId == null || invoiceId <=0) {
+
+      final int fyear = invoice.getInvoiceSummary().getFyear();
+      Integer val =invoiceSummaryRepo.getMaxInvoiceid(fyear);
+
+      val = val == null? 0:val;
+      final int newId = val+1;
+      System.out.printf("invoice new "+newId);
+
+      invoice.getInvoiceSummary().setInvoiceId(newId);
+      invoiceSummaryRepo.save(invoice.getInvoiceSummary());
+
+      invoice.getInvoiceItems().forEach( item ->{
+         item.setInvoiceId(newId);
+         item.setFyear(fyear);
+        invoiceItemRepo.save(item);
+      });
+
+    } else {
+
+      final int fyear = invoice.getInvoiceSummary().getFyear();
+      invoiceSummaryRepo.save(invoice.getInvoiceSummary());
+
+
+      List<InvoiceItem> newItems = new ArrayList<>();
+      invoice.getInvoiceItems().forEach( item ->{
+        item.setInvoiceId(invoiceId);
+        item.setFyear(fyear);
+        if(item.isActive.equals("N")) {
+          invoiceItemRepo.delete(item);
+        } else {
+          newItems.add(item);
+
+        }
+      });
+
+      newItems.stream().forEach( item ->{
+        invoiceItemRepo.save(item);
+      });
+
+
+
+    }
+
+    Map<String,String> response = new HashMap<>();
+    response.put("success","Data saved successfully");
+    return response;
   }
 
 

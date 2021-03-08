@@ -50,22 +50,40 @@ export interface Invoice {
 export class InvoiceItem implements Item {
 
    
-    public name: string;
+    public itemName: string;
     no?:number;
     qty?: number = 0;
     sgst?:number =0;
     igst?:number =0;
     cgst?:number = 0;
     price?:number =0;
+    isActive:string ="Y";
 
-    constructor(name:string,no:number,qty:number,sgst:number,igst:number,cgst:number,price:number) {
+    constructor(itemName:string,no:number,qty:number,sgst:number,igst:number,cgst:number,price:number) {
          
-        this.name = name;
+        this.itemName = itemName;
         this.no = no;
         this.qty = qty;
-        this.sgst = sgst;
-        this.igst = igst;
-        this.cgst = cgst;
+
+        if(sgst == null) {
+            this.sgst = 0;
+        }else {
+            this.sgst = sgst;
+        }
+      
+        if(igst == null) {
+            this.igst = 0;
+        }else {
+            this.igst = igst;
+        }
+
+        if(cgst == null) {
+            this.cgst = 0;
+        }else {
+            this.cgst = cgst;
+        }
+        
+       
         this.price = price;
     }
 

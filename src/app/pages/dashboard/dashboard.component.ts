@@ -3,6 +3,7 @@ import {InvoiceSummary,InvoiceItem} from '../../models/models';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateInvoiceComponent } from '../create-invoice/create-invoice.component';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,8 +16,8 @@ export class DashboardComponent implements OnInit {
   displayedColumns: string[] = ['invoiceId', 'invoiceDate','clientName','totalAmount','action'];
   loaded_data : InvoiceSummary[] = [];
   dataSource: InvoiceSummary[] = [];
-  constructor(public dialog: MatDialog, public dashBoardService: DashboardService) { 
-
+  constructor(public dialog: MatDialog, public dashBoardService: DashboardService,private Activatedroute:ActivatedRoute) { 
+        this.fyear = this.Activatedroute.snapshot.queryParamMap.get('fyear');
   }
 
   ngOnInit(): void {
@@ -29,8 +30,16 @@ export class DashboardComponent implements OnInit {
     // dateTemp.clientName ="AbC0";
     // dateTemp.totalAmount = 788999;
 
-    this.dashBoardService.messageSource$.subscribe((val:string)=>{ 
+    this.dashBoardService.getInvoiceSummary(this.fyear).subscribe((data:InvoiceSummary[])=>{
+            
+      this.loaded_data  = data;
+      this.dataSource = data;
 
+
+     });
+
+    this.dashBoardService.messageSource$.subscribe((val:string)=>{ 
+         
          this.fyear = val;
          this.dashBoardService.getInvoiceSummary(val).subscribe((data:InvoiceSummary[])=>{
             
@@ -68,6 +77,15 @@ export class DashboardComponent implements OnInit {
     });
 
     
+  }
+  deleteRowData(element) {
+
+       let invoiceId = element.invoiceId;
+       this.dashBoardService.deleteInvoice(this.fyear,invoiceId).subscribe(x=>{
+
+        this.refresh();
+       })
+
   }
 
 }

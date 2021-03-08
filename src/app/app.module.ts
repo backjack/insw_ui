@@ -12,6 +12,9 @@ import { DialogBoxComponent } from './core/dialog-box/dialog-box.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import {FlexLayoutModule}  from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { LOCALE_ID } from '@angular/core';
+import "@angular/common/locales/global/en-IN";
+
 
 @NgModule({
   declarations: [
@@ -31,7 +34,7 @@ import { HttpClientModule } from '@angular/common/http';
     FlexLayoutModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [{ provide: LOCALE_ID, useValue: "en-IN" }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

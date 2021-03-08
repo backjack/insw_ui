@@ -3,8 +3,8 @@
     <div fxLayout="row" fxLayoutAlign="space-around" fxLayoutGap="10px" >
       <mat-form-field appearance="fill">
         <mat-label>Item</mat-label>
-        <input matInput type="text" [(ngModel)]="data.name">
-        <button mat-button *ngIf="data.name" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <input matInput type="text" [(ngModel)]="data.itemName">
+        <button mat-button *ngIf="data.itemName" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>

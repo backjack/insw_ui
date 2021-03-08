@@ -34,7 +34,7 @@
       <!-- Weight Column -->
       <ng-container matColumnDef="totalAmount">
         <mat-header-cell *matHeaderCellDef> Total Amount(Rs)</mat-header-cell>
-        <mat-cell *matCellDef="let element" data-label="Total Amount (Rs)"> {{element.totalAmount}}</mat-cell>
+        <mat-cell *matCellDef="let element" data-label="Total Amount (Rs)"> {{element.totalAmount | number:'1.2-2'}}</mat-cell>
       </ng-container>
 
 
@@ -44,7 +44,7 @@
         <mat-cell *matCellDef="let element" class="action-link" data-label="Action">
           <a (click)="openDialog('Update',element)">Edit</a> |
           <a (click)="deleteRowData(element)"> Delete</a> |
-          <a (click)="deleteRowData(element)"> Download</a>
+          <a (click)="download(element)"> Download</a>
         </mat-cell>
       </ng-container>
 

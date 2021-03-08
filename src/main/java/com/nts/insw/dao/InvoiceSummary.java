@@ -1,48 +1,66 @@
 package com.nts.insw.dao;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name="invoice")
+@IdClass(InvoiceId.class)
 public class InvoiceSummary {
 
-  private String invoiceId;
 
-  private String clientId;
+  @Id
+  @Column(name="invoiceId")
+  private int invoiceId;
 
-  private String clientName;
 
-  private String quotationNo;
+  @Id
+  @Column(name="clientId")
+  private int clientId;
 
-  private Date invoiceDate;
-
-  private Date referenceDate;
-
-  private int fyear;
-
-  private double totalAmount;
-
-  public String getInvoiceId() {
-    return invoiceId;
-  }
-
-  public void setInvoiceId(String invoiceId) {
-    this.invoiceId = invoiceId;
-  }
-
-  public String getClientId() {
-    return clientId;
-  }
-
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
-  }
+  @Transient
+  private String ClientName;
 
   public String getClientName() {
-    return clientName;
+    return ClientName;
   }
 
   public void setClientName(String clientName) {
-    this.clientName = clientName;
+    ClientName = clientName;
   }
+
+  @Column(name="quotationNo")
+  private String quotationNo;
+
+  @Column(name="invoiceDate")
+  private Date invoiceDate;
+
+  @Column(name="referenceDate")
+  private Date referenceDate;
+
+  @Column(name="fyear")
+  private int fyear;
+
+  @Column(name="totalAmount")
+  private Double totalAmount;
+
+  public int getInvoiceId() {
+    return invoiceId;
+  }
+
+  public void setInvoiceId(int invoiceId) {
+    this.invoiceId = invoiceId;
+  }
+
+  public int getClientId() {
+    return clientId;
+  }
+
+  public void setClientId(int clientId) {
+    this.clientId = clientId;
+  }
+
+
 
   public String getQuotationNo() {
     return quotationNo;
@@ -76,11 +94,24 @@ public class InvoiceSummary {
     this.fyear = fyear;
   }
 
-  public double getTotalAmount() {
+  public Double getTotalAmount() {
     return totalAmount;
   }
 
-  public void setTotalAmount(double totalAmount) {
+  public void setTotalAmount(Double totalAmount) {
     this.totalAmount = totalAmount;
+  }
+
+  @Override
+  public String toString() {
+    return "InvoiceSummary{" +
+      "invoiceId='" + invoiceId + '\'' +
+      ", clientId=" + clientId +
+      ", quotationNo='" + quotationNo + '\'' +
+      ", invoiceDate=" + invoiceDate +
+      ", referenceDate=" + referenceDate +
+      ", fyear=" + fyear +
+      ", totalAmount=" + totalAmount +
+      '}';
   }
 }
